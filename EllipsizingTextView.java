@@ -165,27 +165,32 @@ public class EllipsizingTextView extends TextView {
                         workingText = firstLine.subSequence(0, end) + ELLIPSIS;
                     }
                 } else {
+                      //取出前面的字符
                     firstLine = fullText.subSequence(0, layout.getLineEnd(linesCount - 2));
                     log("firstLine_____" + firstLine);
-                    //取出最后两行字符串
+                    CharSequence lastHalfFront = fullText.subSequence(layout.getLineEnd(linesCount - 2), layout.getLineEnd(linesCount - 1));
+                    if (lastHalfFront != null && lastHalfFront.length() > 2) {
+                        lastHalfFront = lastHalfFront.subSequence(0, lastHalfFront.length() / 2);
+                    }
+                    log("lastHalfFront_____" + lastHalfFront);
                     //取出最后两行字符串
                     CharSequence lastTwoLine = fullText.subSequence(layout.getLineStart(layout.getLineCount() - linesCount), fullText.length()).toString();
                     log("lastTwoLine_____" + lastTwoLine);
                     //算出倒数第二行的中间截止位置index
                     int lastHalfStart = layout.getLineStart(layout.getLineCount() - linesCount);
                     int lastHalfEnd = layout.getLineEnd(layout.getLineCount() - linesCount);
-                    CharSequence lastHalfLine = fullText.subSequence(lastHalfStart, lastHalfStart + (lastHalfEnd - lastHalfStart) / 2);
-                    log("lastHalfLine_____" + lastHalfLine);
+//                    CharSequence lastHalfLine = fullText.subSequence(lastHalfStart, lastHalfStart + (lastHalfEnd - lastHalfStart) / 2);
+//                    log("lastHalfLine_____" + lastHalfLine);
                     CharSequence lastEndHalfLine = fullText.subSequence(lastHalfStart + (lastHalfEnd - lastHalfStart) / 2, fullText.length());
                     log("lastEndHalfLine_____" + lastEndHalfLine);
                     int start = 0;
-                    workingText = firstLine + lastHalfLine.toString() + ELLIPSIS + lastEndHalfLine;
-                    while (createWorkingLayout(firstLine + lastHalfLine.toString() + ELLIPSIS + lastEndHalfLine.subSequence(start, lastEndHalfLine.length())).getLineCount() > linesCount) {
+                    workingText = firstLine + lastHalfFront.toString() + ELLIPSIS + lastEndHalfLine;
+                    while (createWorkingLayout(firstLine + lastHalfFront.toString() + ELLIPSIS + lastEndHalfLine.subSequence(start, lastEndHalfLine.length())).getLineCount() > linesCount) {
                         start += 1;
                         if (start > lastEndHalfLine.length()) {
                             break;
                         }
-                        workingText = firstLine + lastHalfLine.toString() + ELLIPSIS + lastEndHalfLine.subSequence(start, lastEndHalfLine.length());
+                        workingText = firstLine + lastHalfFront.toString() + ELLIPSIS + lastEndHalfLine.subSequence(start, lastEndHalfLine.length());
                     }
                     log("finally workingText_____" + workingText);
                 }
